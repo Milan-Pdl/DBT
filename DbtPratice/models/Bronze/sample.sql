@@ -1,0 +1,1 @@
+select * from `dbt_toturial-dev`.source.dim_date
