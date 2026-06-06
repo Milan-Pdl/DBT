@@ -1,0 +1,33 @@
+sources:
+  - name: source
+    database: dbt_toturial-dev
+    # equivalent to the catalog in a databrick
+    schema: source  
+    # *By default, schema will be the same as name. Add schema only if 
+    # you want to use a source name that differs from the existing schema.
+    tables:
+      - name: orders
+      - name: customers
+
+  - name: stripe
+    tables:
+      - name: payments
+
+
+# json equivalent
+
+
+{
+    sources:{
+      "name":"source",
+      "database":"dbt_tutorial-dev",
+      "schema":"source",
+      "tables":[
+        {
+          "name":"orders",
+        },
+        "name":"payments"
+      ]
+    }
+
+}
