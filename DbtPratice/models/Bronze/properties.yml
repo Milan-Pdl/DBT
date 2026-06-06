@@ -5,3 +5,16 @@ models:
     config:
       materialized: view
       
+  - name: bronze_dim_sales
+    columns:
+      - name: sales_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: bronze_dim_store
+    columns:
+      - name: store_sk
+        data_tests:
+          - unique
+          - not_null
