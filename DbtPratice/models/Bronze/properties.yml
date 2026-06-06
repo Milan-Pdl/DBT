@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: bronze_dim_date #must be the name of the file-- including case sensitivity
+    config:
+      materialized: views
+      
