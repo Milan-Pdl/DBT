@@ -6,3 +6,16 @@ also after running command ut will also create a traget folder which  holds the 
 
 
 dbt-clean== it will delet the traget folder
+
+
+dbt run --select broze_dim_date::  this will only create a model for bronze_dim_date.. because we will not run
+all amodels every time
+
+dbt run --select "broze_dim_date broze_dim_sales"
+for running multiple model
+
+
+dbt run --select "models/bronze/"
+--run all the models in bronze dir 
+--------this is called node selecion in dbt-----------------
+
