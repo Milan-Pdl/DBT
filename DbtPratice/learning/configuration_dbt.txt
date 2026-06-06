@@ -1,0 +1,47 @@
+In dbt, local configurations always override global configurations. Think of it as a hierarchy where the closest setting to the code wins.
+
+1. Global Style (dbt_project.yml)
+Best for: Setting broad rules for entire directories or the whole project at once.
+
+Syntax Trick: Uses a + prefix before config options to distinguish them from folder names.
+
+YAML
+# dbt_project.yml
+models:
+  my_project_name:
+    bronze:
+      +materialized: view    # 1. Everything in 'bronze' folder becomes a view
+    silver:
+      +materialized: table   # 2. Everything in 'silver' folder becomes a table
+2. Local In-Line Style (config() Macro)
+Best for: Making a specific model an exception to the global rule.
+
+Syntax Trick: Placed at the absolute top of your individual .sql model file using Jinja braces. This configuration always wins.
+
+SQL
+-- models/silver/special_incremental_model.sql
+
+{{ config(
+    materialized='incremental',
+    unique_key='user_id'
+) }}
+
+-- Even though the silver folder is set to 'table' globally, 
+-- this specific model will build as 'incremental' because local wins!
+select * from {{ ref('bronze_users') }}
+3. Property File Style (schema.yml)
+Best for: Configuring settings for a model when you are already adding documentation or data tests to it.
+
+YAML
+# models/silver/schema.yml
+version: 2
+
+models:
+  - name: special_incremental_model
+    config:
+      materialized: incremental
+      unique_key: 'user_id'
+💡 The Golden Rule of Precedence
+Inline File (config())  🏆 Highest Priority (Overrides everything)
+└── Property File (schema.yml)
+└── Project File (dbt_project.yml) Lowest Priority (Global Default)

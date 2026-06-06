@@ -1,0 +1,8 @@
+dbt init-- intilizes you dbt project
+
+
+dbt-run-- creates a model for you in you prefered location can be databricks, postgres etc
+also after running command ut will also create a traget folder which  holds the history of the queries
+
+
+dbt-clean== it will delet the traget folder
