@@ -19,3 +19,5 @@ dbt run --select "models/bronze/"
 --run all the models in bronze dir 
 --------this is called node selecion in dbt-----------------
 
+
+dbt test: to run the test cases 
