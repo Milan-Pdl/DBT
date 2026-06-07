@@ -43,5 +43,5 @@ models:
       +schema: gold        # ◄— Added the + prefix
   seeds:
     DbtPratice:
-    Bronze:
-      +schema: bronze  
+      Bronze:
+        +schema: bronze  
