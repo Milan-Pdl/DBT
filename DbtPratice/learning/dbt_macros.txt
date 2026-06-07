@@ -1,0 +1,59 @@
+In dbt, Macros are essentially pieces of SQL code that you can write once and reuse multiple times across your entire project. They are the SQL equivalent of functions in traditional programming languages like Python or JavaScript.
+
+Macros are written using a combination of SQL and Jinja (a Python-based templating language). They allow you to add logic to your SQL files that standard SQL can't handle on its own, such as if/else statements, loops, and dynamic variable mapping.
+
+Why use Macros? (The Core Benefits)
+Instead of copy-pasting the exact same complex SQL blocks into dozens of different files, you can wrap that logic inside a macro.
+
+Don't Repeat Yourself (DRY): If your business logic changes, you only have to update it in one place (the macro file) instead of hunting down and editing 20 different model files.
+
+Dynamic SQL Generation: You can write code that automatically changes its behavior based on variables, targets, or environments (e.g., executing different logic in dev vs. prod).
+
+Clean Codebases: It abstracts away ugly, repetitive logic, making your main dbt model files incredibly clean and readable.
+
+Common Use Cases for Macros
+1. Converting Currencies or Units
+If you have multiple tables containing price data that need to be converted to a standard format (like converting paisa/cents to rupees/dollars, or applying a standard tax rate), a macro handles it cleanly.
+
+2. Cleaning and Masking Sensitive Data
+You can write a macro that automatically hashes email addresses or masks personal identifiers for security compliance across your staging tables.
+
+3. Generating Custom Schema/Database Names
+dbt uses built-in macros behind the scenes to determine where your tables get built. You can override these or create your own to dynamically route models to specific databases based on who is running the command.
+
+A Simple Example: Creating a Currency Converter
+Let's say you have amounts stored as cents/paisa in your raw tables, and you want to convert them to standard decimals.
+
+Step 1: Define the Macro
+Create a file inside your macros/ folder named cents_to_dollars.sql:
+
+SQL
+-- macros/cents_to_dollars.sql
+
+{% macro cents_to_dollars(column_name, decimal_places=2) %}
+    round( cast({{ column_name }} as numeric) / 100, {{ decimal_places }} )
+{% endmacro %}
+Step 2: Use it in your Models
+Now, you can call this macro inside any of your Silver or Gold models using the {{ }} syntax:
+
+SQL
+-- models/Silver/silver_fact_sales.sql
+
+select
+    sales_id,
+    store_sk,
+    {{ cents_to_dollars('gross_amount') }} as gross_amount_usd,
+    {{ cents_to_dollars('net_amount') }} as net_amount_usd
+from {{ ref('bronze_fact_sales') }}
+Step 3: What dbt Compiles
+When you run dbt compile or dbt run, dbt will evaluate the Jinja code and generate the standard SQL for your database to execute:
+
+SQL
+select
+    sales_id,
+    store_sk,
+    round( cast(gross_amount as numeric) / 100, 2 ) as gross_amount_usd,
+    round( cast(net_amount as numeric) / 100, 2 ) as net_amount_usd
+from hive_metastore.bronze.bronze_fact_sales
+Advanced Capabilities ⚡
+Macros can also execute queries against your data warehouse while compiling your code. For example, a macro can run a SELECT DISTINCT category_id FROM categories query to fetch a list of your product categories, and then dynamically generate a loop to pivot those categories into individual columns in your final table!
