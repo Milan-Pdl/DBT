@@ -1,3 +1,8 @@
 generic test- simple test cases that checks like null, uniquness of a  column
 singular_test- write a whole sql query for a test like checking the amount can be negative.. qunatritty 
 cannot be negative and all
+
+
+-----------------------
+DBT seeds
+It is like a 

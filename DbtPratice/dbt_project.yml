@@ -41,3 +41,7 @@ models:
     Gold:
       +materialized: table
       +schema: gold        # ◄— Added the + prefix
+  seeds:
+    DbtPratice:
+    Bronze:
+      +schema: bronze  

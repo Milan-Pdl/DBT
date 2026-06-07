@@ -1,0 +1,62 @@
+# dbt Seeds
+
+In dbt, seeds are CSV files inside your project repository that dbt can load directly into your data warehouse as regular tables.
+
+They are designed specifically for static, low-change lookup data that you want to version control along with your SQL code.
+
+## What are they used for?
+
+You should use seeds for small datasets that change rarely and are manually maintained, such as:
+
+- Country code mappings (e.g., US -> United States)
+- Employee email lists to exclude internal traffic from analytics
+- Marketing UTM campaign lookup lists
+- Financial fiscal calendars or list of public holidays
+
+## How do they work?
+
+The workflow for using a seed is incredibly straightforward:
+
+1. Place your CSV in the project
+
+   Drop your static data file into the `seeds/` directory of your dbt project (e.g., `seeds/country_codes.csv`). The CSV must include headers in the first row:
+
+   ```csv
+   country_code,country_name
+   US,United States
+   CA,Canada
+   UK,United Kingdom
+   ```
+
+2. Run the command
+
+   Open your terminal and run the dedicated seeds command:
+
+   ```bash
+   dbt seed
+   ```
+
+   dbt will look inside your `seeds/` folder, find the CSV, automatically determine the data types for each column, create a table named `country_codes` inside your target schema, and insert the rows.
+
+3. Reference it in your models
+
+   Once seeded, you can reference this table in your downstream SQL models using the exact same `{{ ref() }}` function you use for your regular SQL models:
+
+   ```sql
+   -- models/Silver/stg_customers.sql
+   select 
+       c.customer_id,
+       c.name,
+       lookup.country_name
+   from {{ ref('bronze_dim_customer') }} c
+   left join {{ ref('country_codes') }} lookup 
+       on c.country_id = lookup.country_code
+   ```
+
+## When should you NOT use seeds?
+
+A common beginner mistake is using seeds to upload raw transactional data. You should never use seeds for:
+
+- Large files: Anything over a few megabytes or tens of thousands of rows will cause `dbt seed` to run extremely slowly.
+- Production raw data: Real data feeds (like daily website orders or user signups) should be loaded into the warehouse via traditional ETL/ELT tools (Fivetran, Airbyte, Python scripts) and configured as dbt Sources, not seeds.
+- Frequently changing data: If the data updates every day, updating a CSV file and making a git commit daily will quickly clutter your repository history.
