@@ -1,0 +1,34 @@
+-----------------------------------------------------
+dbt run --select broze_dim_date here how dbt knows its in bronzew folder model cause if there is same file name in gold saying
+
+dbt run --select broze_dim_date how it is handles?
+
+
+That is a fantastic question. This gets to the core of how dbt treats file names and paths.
+
+The short answer is: dbt doesn't look at the folder path when you use --select; it identifies models strictly by their unique file name. Here is exactly how dbt handles this under the hood, and what happens if you try to use the same file name twice.
+
+1. How dbt knows it's in the Bronze folder
+When you first run dbt run, the very first thing dbt does is parse your entire project. It scans every single folder you have configured in your model-paths (like Bronze, Silver, Gold).
+
+During this scan, it builds an internal catalog of your models. It says:
+
+"Okay, I found a file named bronze_dim_date.sql. It happens to live in the models/Bronze/ folder, and according to dbt_project.yml, anything in that folder gets sent to the bronze schema."
+
+When you type dbt run --select bronze_dim_date, dbt looks at its internal catalog for a model named exactly bronze_dim_date, finds it, looks up its folder location, and runs it.
+
+2. What happens if you have the same file name in Gold?
+If you create a file named bronze_dim_date.sql inside your Gold folder, dbt will completely crash with a compilation error before it even attempts to run your code.
+
+dbt strictly enforces that model names must be completely unique across your entire project, regardless of what folder they are sitting in.
+
+If you have duplicates, dbt will throw an error that looks like this:
+
+Plaintext
+Compilation Error
+dbt found two resources with the name 'bronze_dim_date'.
+- model.DbtPratice.bronze_dim_date (models/Bronze/bronze_dim_date.sql)
+- model.DbtPratice.bronze_dim_date (models/Gold/bronze_dim_date.sql)
+Because of this rule, you cannot have two identical file names in different folders. You would need to name the one in Gold something like gold_dim_date.sql.
+
+-------------------------------------------------

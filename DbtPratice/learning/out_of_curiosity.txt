@@ -1,0 +1,46 @@
+--------------------------------------
+KPI stands for Key Performance Indicator.
+
+A KPI is a measurable value used to track how effectively a person, team, or organization is achieving a specific goal.
+
+Breaking it down
+Key: Important to the objective.
+Performance: How well something is being done.
+Indicator: A metric that shows progress or results.
+Examples of KPIs
+
+Sales
+
+Monthly revenue
+Number of new customers
+Sales conversion rate
+
+Marketing
+
+Website traffic
+Cost per lead
+Return on advertising spend (ROAS)
+
+Customer Service
+
+Customer satisfaction score (CSAT)
+Average response time
+Customer retention rate
+
+Human Resources
+
+Employee turnover rate
+Time to hire
+Employee engagement score
+Example
+
+If a company's goal is to increase online sales by 20% this year, relevant KPIs might include:
+
+Monthly online revenue
+Website conversion rate
+Average order value
+
+These KPIs help determine whether the company is on track to achieve its goal.
+
+In simple terms: A KPI is a number that tells you whether you're succeeding at an important objective.
+-----------------------------------
